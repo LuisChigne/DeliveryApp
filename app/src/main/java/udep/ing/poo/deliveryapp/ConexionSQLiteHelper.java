@@ -19,17 +19,17 @@ public class ConexionSQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(Utilidades.CREAR_TABLA_OFERTAS);
 
         db.execSQL(Utilidades.REGISTRO1);
-        /*
         db.execSQL(Utilidades.REGISTRO2);
         db.execSQL(Utilidades.REGISTRO3);
         db.execSQL(Utilidades.REGISTRO4);
         db.execSQL(Utilidades.REGISTRO5);
+        /*
         db.execSQL(Utilidades.REGISTRO6);
         db.execSQL(Utilidades.REGISTRO7);
         db.execSQL(Utilidades.REGISTRO8);
         db.execSQL(Utilidades.REGISTRO9);
         db.execSQL(Utilidades.REGISTRO10);
-        
+
          */
 
 
