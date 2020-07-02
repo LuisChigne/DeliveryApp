@@ -31,11 +31,21 @@ public class SelectOptionActivity extends AppCompatActivity {
             }
         });
         botonRegistrar = (Button)findViewById(R.id.btnRegisterNow);
+        botonRegistrar.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                goToRegistrar();
+            }
+        });
     }
 
     private void goToLogin() {
         Intent i = new Intent(SelectOptionActivity.this, LoginActivity.class);
         startActivity(i);
     }
-
+    private void goToRegistrar() {
+        Intent i = new Intent(SelectOptionActivity.this, RegistrarActivity.class);
+        startActivity(i);
+    }
 }

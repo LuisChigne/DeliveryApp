@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">DeliveryApp</string>
+    <!--Strings para la ActivityMain-->
+    <string name="Slogan">Fast Delivery cerca de ti</string>
+    <string name="Cliente">SOY CLIENTE</string>
+    <string name="Repartidor">SOY REPARTIDOR</string>
+    <!--Strings para la SelectOptionActivity-->
+    <string name="SeleccionaOpcion">Selecciona una opción</string>
+    <string name="TengoCuenta">YA TENGO CUENTA</string>
+    <string name="Registrarme">REGISTRARME AHORA</string>
+    <!--Strings para la LoginActivity-->
+    <string name="MensajeLogin">Ingresa para empezar a ordenar</string>
+    <string name="Correo">Correo electrónico</string>
+    <string name="Contrasena">Contraseña</string>
+    <string name="Ingresar">INGRESAR</string>
+    <!--Strings para la RegistrarActivity-->
+    <string name="MensajeRegistrar">Ingresa tus datos y unete a FastDelivery</string>
+    <string name="Nombre">Nombre Completo</string>
+    <string name="Registrar">REGISTRAR</string>
+    <string name="Correo2">Repetir contraseña</string>
+    <!--Strings para MenuActivity-->
+    <string name="Bienvenido">Bienvenido a Fast Delivery</string>
+    <string name="InformacionCasa">DIRECCIÓN</string>
+    <string name="Ofertas">OFERTAS</string>
+    <string name="Pedidos">PEDIDOS</string>
+    <string name="Restaurantes">RESTAURANTES</string>
+    <string name="InformacionUsuario">USUARIO</string>
+    <string name="CerrarSesion">CERRAR SESIÓN</string>
+
 </resources>

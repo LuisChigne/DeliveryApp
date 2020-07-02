@@ -1,38 +1,45 @@
 package udep.ing.poo.deliveryapp;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.NotificationCompat;
+import android.app.AlertDialog;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
+
+import dmax.dialog.SpotsDialog;
 
 public class LoginActivity extends AppCompatActivity {
-    TextInputEditText eTextInEmail, eTextInPassowrd;
+    TextInputEditText eTextInEmail, eTextInPassword;
     Button botonIngresar;
-    FirebaseAuth autenticacionLogin;
-    DatabaseReference mDatabase;
+
+    AlertDialog mDialog;
+    Toolbar mToolbar;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        eTextInEmail = (TextInputEditText)findViewById(R.id.textInputEmail);
-        eTextInPassowrd = (TextInputEditText)findViewById(R.id.textoInputPassword);
-        botonIngresar = (Button)findViewById(R.id.btnIngresar);
-        autenticacionLogin = FirebaseAuth.getInstance();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        eTextInEmail = (TextInputEditText) findViewById(R.id.textInputEmail);
+        eTextInPassword = (TextInputEditText) findViewById(R.id.textoInputPassword);
+        botonIngresar = (Button) findViewById(R.id.btnIngresar);
+
+        mDialog = new SpotsDialog.Builder().setContext(LoginActivity.this).setMessage("Espere un momento").build();
+        mToolbar = (Toolbar) findViewById(R.id.toolBar);
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setTitle("Ingresar");
+        //El toolbar tendrá un botón para ir hacia atrás -- getSupportActionBar().setDisplayHomeAsUpEnables(true)
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         botonIngresar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -40,36 +47,45 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null) {
+            String usuario = bundle.getString("campoCorreo");
+            eTextInEmail.setText(usuario);
+        }
+
     }
-    //Validación para ingresar, es decir deben coincidir las contraseña y el email.
+
     private void ingresar() {
-        String email = eTextInEmail.getText().toString();
-        String password = eTextInPassowrd.getText().toString();
-        //Comprobar que el email y el passwor no esten vacíos
-        if(!email.isEmpty() && !password.isEmpty()){
-            //aseguro que la contraseña tenga mas de 6 caracteres, debido a que la herramienta autentication de firebase
-            //te exige más de 6 caracteres
-            if(password.length()>=6){
-                //OnCompletListener sirve para detallar que es lo que se va a hacer cuando se completa la autenticación
-                autenticacionLogin.signInWithEmailAndPassword(email, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        //si la tarea es exitosa
-                        if(task.isSuccessful()){
-                            Toast.makeText(LoginActivity.this,"Contraseña y Password válidos", Toast.LENGTH_SHORT).show();
+        String usuario = eTextInEmail.getText().toString();
+        String password = eTextInPassword.getText().toString();
+        if (usuario.equals("")) {
+            Toast.makeText(this, "Tiene que colocar su correo ", Toast.LENGTH_SHORT).show();
+        } else if (password.equals("")) {
+            Toast.makeText(this, "Tiene que colocar su contraseña", Toast.LENGTH_SHORT).show();
 
-                        } else {
-                            Toast.makeText(LoginActivity.this,"La contraseña y/o el password son incorrectos",Toast.LENGTH_SHORT).show();
-                        }
-
-                    }
-                });
-            } else {
-                Toast.makeText(LoginActivity.this,"La contraseña debe tener más de 6 caracteres", Toast.LENGTH_SHORT).show();
-            }
         } else {
-            Toast.makeText(LoginActivity.this,"Necesitas escribir contraseña y usuario gil", Toast.LENGTH_SHORT).show();
+            Usuarios usuarios = new Usuarios(this.getSharedPreferences("proyecto", Context.MODE_PRIVATE));
+            if (usuarios.validar(usuario, password)) {
+                Intent i = new Intent(this, MenuActivity.class);
+                i.putExtra("correo", usuario);
+                startActivity(i);
+            } else {
+                Toast.makeText(getApplicationContext(), "Usuario o contraseña errónea", Toast.LENGTH_SHORT).show();
 
+                NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "proyecto");
+                builder.setContentTitle("A lo mejor no se encuentra registrado...");
+                builder.setContentText("Presione aquí para registrarse");
+                builder.setSmallIcon(R.drawable.ic_launcher_foreground);
+                builder.setAutoCancel(true); //
+
+                Intent intent = new Intent(this, RegistrarActivity.class);
+                PendingIntent pIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
+                builder.setContentIntent(pIntent);
+
+                NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+                manager.notify(1, builder.build());
+            }
         }
     }
 }
